@@ -352,8 +352,14 @@ if (LLAMA_VULKAN)
     if (Vulkan_FOUND)
         message(STATUS "Vulkan found")
 
-        add_library(ggml-vulkan STATIC ggml-vulkan.cpp ggml-vulkan.h)
+        add_library(ggml-vulkan STATIC ggml-vulkan.cpp ggml-vulkan.h ${CMAKE_CURRENT_BINARY_DIR}/ggml-vulkan-shaders.hpp)
         target_link_libraries(ggml-vulkan PUBLIC Vulkan::Vulkan)
+        target_include_directories(ggml-vulkan PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+        add_custom_command(
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ggml-vulkan-shaders.hpp
+            COMMAND python3 ${CMAKE_SOURCE_DIR}/ggml_vk_generate_shaders.py
+            DEPENDS ${CMAKE_SOURCE_DIR}/ggml_vk_generate_shaders.py
+        )
 
         add_compile_definitions(GGML_USE_VULKAN)
 
