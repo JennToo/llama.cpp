@@ -476,8 +476,11 @@ ifdef LLAMA_VULKAN_CHECK_RESULTS
 	CXXFLAGS  += -DGGML_VULKAN_CHECK_RESULTS
 endif
 
-ggml-vulkan.o: ggml-vulkan.cpp ggml-vulkan.h
+ggml-vulkan.o: ggml-vulkan.cpp ggml-vulkan.h ggml-vulkan-shaders.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+ggml-vulkan-shaders.hpp: ./ggml_vk_generate_shaders.py
+	python3 ./$<
 endif # LLAMA_VULKAN
 
 ifdef LLAMA_HIPBLAS
